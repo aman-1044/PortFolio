@@ -1,0 +1,13 @@
+@import './styles/sf-tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Override base layer to prevent white backgrounds */
+@layer base {
+  html, body, #root {
+    background-color: #0E1B2E;
+    color: #FFFFFF;
+  }
+}

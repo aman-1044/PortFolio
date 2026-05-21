@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --sf-bg:       #0E1B2E;
+  --sf-card:     #16263F;
+  --sf-card-2:   #1B2E4A;
+  --sf-blue:     #0176D3;
+  --sf-blue-lt:  #1B96FF;
+  --sf-green:    #2E844A;
+  --sf-yellow:   #FFB75D;
+  --sf-red:      #C23934;
+  --sf-text:     #FFFFFF;
+  --sf-muted:    #8A9BB0;
+  --sf-border:   #1E3A5F;
+  --sf-shimmer:  #1F3554;
+  --sf-header:   #080F1A;
+  --sf-nav:      #0176D3;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 14px;
+}
+
+body {
+  font-family: 'Nunito', 'Salesforce Sans', Arial, sans-serif;
+  background-color: var(--sf-bg);
+  color: var(--sf-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--sf-bg); }
+::-webkit-scrollbar-thumb { background: var(--sf-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--sf-blue); }
+
+/* Shimmer animation */
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    var(--sf-card) 25%,
+    var(--sf-shimmer) 50%,
+    var(--sf-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* SF Widget Card */
+.sf-widget {
+  background: var(--sf-card);
+  border: 1px solid var(--sf-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sf-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--sf-border);
+  background: var(--sf-card);
+}
+
+.sf-widget-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sf-text);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.sf-record-count {
+  font-size: 11px;
+  color: var(--sf-muted);
+  background: var(--sf-card-2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--sf-border);
+}
+
+/* SF Table */
+.sf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.sf-table thead th {
+  background: var(--sf-card-2);
+  color: var(--sf-muted);
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--sf-border);
+  white-space: nowrap;
+}
+
+.sf-table tbody tr {
+  border-bottom: 1px solid rgba(30, 58, 95, 0.5);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.sf-table tbody tr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--sf-blue-lt);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.sf-table tbody tr:hover::before {
+  opacity: 1;
+}
+
+.sf-table tbody tr:hover {
+  background: var(--sf-card-2);
+}
+
+.sf-table tbody td {
+  padding: 10px 12px;
+  color: var(--sf-text);
+  vertical-align: middle;
+}
+
+/* SF Pill / Badge */
+.sf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.sf-pill-blue   { background: rgba(1,118,211,0.2);  color: #1B96FF; border: 1px solid rgba(1,118,211,0.3); }
+.sf-pill-green  { background: rgba(46,132,74,0.2);  color: #3BA755; border: 1px solid rgba(46,132,74,0.3); }
+.sf-pill-yellow { background: rgba(255,183,93,0.15); color: #FFB75D; border: 1px solid rgba(255,183,93,0.3); }
+.sf-pill-purple { background: rgba(150,80,200,0.2); color: #C17DE8; border: 1px solid rgba(150,80,200,0.3); }
+.sf-pill-orange { background: rgba(255,140,0,0.2);  color: #FFA500; border: 1px solid rgba(255,140,0,0.3); }
+.sf-pill-cyan   { background: rgba(0,200,210,0.15); color: #00C8D2; border: 1px solid rgba(0,200,210,0.3); }
+.sf-pill-gray   { background: rgba(138,155,176,0.15); color: #8A9BB0; border: 1px solid rgba(138,155,176,0.2); }
+
+/* SF Button */
+.sf-btn-primary {
+  background: var(--sf-blue);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sf-btn-primary:hover {
+  background: var(--sf-blue-lt);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(1,118,211,0.4);
+}
+
+.sf-btn-ghost {
+  background: transparent;
+  color: var(--sf-blue-lt);
+  border: 1px solid var(--sf-border);
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sf-btn-ghost:hover {
+  background: rgba(1,118,211,0.1);
+  border-color: var(--sf-blue-lt);
+  transform: translateY(-1px);
+}
+
+/* SF Input */
+.sf-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--sf-border);
+  border-radius: 4px;
+  color: var(--sf-text);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 7px 12px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.sf-input::placeholder { color: var(--sf-muted); }
+.sf-input:focus {
+  border-color: var(--sf-blue);
+  box-shadow: 0 0 0 3px rgba(1,118,211,0.2);
+}
+
+/* Status dot */
+.sf-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Toast */
+.sf-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  min-width: 280px;
+  padding: 14px 20px;
+  border-radius: 6px;
+  background: var(--sf-card);
+  border: 1px solid var(--sf-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+/* Chatter styles */
+.chatter-post {
+  padding: 16px;
+  border-bottom: 1px solid var(--sf-border);
+  transition: background 0.15s;
+}
+
+.chatter-post:hover {
+  background: rgba(27,46,74,0.4);
+}
+
+.chatter-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
