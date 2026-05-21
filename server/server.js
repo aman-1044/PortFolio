@@ -11,11 +11,19 @@ const PORT = process.env.PORT || 5000
 
 // ── Middleware ──────────────────────────────────────────────
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    process.env.FRONTEND_URL,
-  ].filter(Boolean),
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true)
+    
+    const isLocalhost = /^http:\/\/localhost:\d+$/.test(origin)
+    const isAllowedFrontend = origin === process.env.FRONTEND_URL
+    
+    if (isLocalhost || isAllowedFrontend) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
 }))
 app.use(express.json({ limit: '10kb' }))

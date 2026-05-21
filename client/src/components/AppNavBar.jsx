@@ -1,38 +1,31 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
 const TABS = [
-  { id: 'home',           label: 'Home',           section: 'hero' },
-  { id: 'projects',       label: 'Projects',        section: 'projects' },
-  { id: 'skills',         label: 'Skills',          section: 'skills' },
-  { id: 'experience',     label: 'Experience',      section: 'stats' },
-  { id: 'certifications', label: 'Certifications',  section: 'certs' },
-  { id: 'contact',        label: 'Contact',         section: 'contact' },
+  { id: 'home',           label: 'Home',          section: 'hero'     },
+  { id: 'projects',       label: 'Projects',      section: 'projects' },
+  { id: 'skills',         label: 'Skills',        section: 'skills'   },
+  { id: 'experience',     label: 'Experience',    section: 'stats'    },
+  { id: 'certifications', label: 'Certifications',section: 'certs'    },
+  { id: 'contact',        label: 'Contact',       section: 'contact'  },
 ]
 
 export default function AppNavBar() {
   const [activeTab, setActiveTab] = useState('home')
-  const tabRefs = useRef({})
 
   const scrollToSection = (tab) => {
-    const el = document.getElementById(tab.section)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    document.getElementById(tab.section)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     setActiveTab(tab.id)
   }
 
-  // Scroll-spy: update active tab based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY + 120
       let current = 'home'
       for (const tab of TABS) {
         const el = document.getElementById(tab.section)
-        if (el && el.offsetTop <= scrollY) {
-          current = tab.id
-        }
+        if (el && el.offsetTop <= scrollY) current = tab.id
       }
       setActiveTab(current)
     }
@@ -44,41 +37,64 @@ export default function AppNavBar() {
     <nav
       style={{
         background: 'var(--sf-nav)',
-        borderBottom: '1px solid rgba(0,0,0,0.2)',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+        borderBottom: '1px solid rgba(0,0,0,0.3)',
+        boxShadow: '0 2px 16px rgba(0,0,0,0.4)',
+        position: 'sticky',
+        top: 48,
+        zIndex: 40,
       }}
-      className="sticky top-12 z-40"
     >
-      <div className="flex items-center h-10 px-4">
+      <div style={{ display: 'flex', alignItems: 'center', height: 40, padding: '0 16px' }}>
         {/* App Title */}
-        <div className="flex items-center gap-2 pr-6 border-r border-white/20 mr-2 flex-shrink-0">
-          <span className="text-white font-bold text-sm tracking-wide">Aman Anand</span>
-          <span className="text-white/50 text-sm">|</span>
-          <span className="text-white/80 text-xs">Portfolio App</span>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          paddingRight: 20, borderRight: '1px solid rgba(255,255,255,0.2)',
+          marginRight: 8, flexShrink: 0,
+        }}>
+          <span style={{ color: '#fff', fontWeight: 800, fontSize: 13, fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.04em' }}>
+            Aman Anand
+          </span>
+          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>|</span>
+          <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, fontFamily: 'Space Grotesk, sans-serif' }}>
+            Portfolio App
+          </span>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center h-full overflow-x-auto scrollbar-hide">
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%', overflowX: 'auto', flexShrink: 1 }}>
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id
             return (
               <button
                 key={tab.id}
-                ref={(el) => (tabRefs.current[tab.id] = el)}
                 onClick={() => scrollToSection(tab)}
-                className="relative h-full px-4 flex items-center gap-1 text-sm font-semibold transition-all duration-150 whitespace-nowrap flex-shrink-0"
                 style={{
-                  color: isActive ? '#fff' : 'rgba(255,255,255,0.75)',
+                  position: 'relative',
+                  height: '100%',
+                  padding: '0 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  fontFamily: 'Space Grotesk, sans-serif',
+                  color: isActive ? '#fff' : 'rgba(255,255,255,0.72)',
                   background: isActive ? 'rgba(255,255,255,0.12)' : 'transparent',
+                  border: 'none',
                   borderBottom: isActive ? '2px solid #fff' : '2px solid transparent',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.01em',
                 }}
               >
                 {tab.label}
                 {isActive && (
                   <motion.div
-                    layoutId="activeTabIndicator"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                    style={{ borderRadius: '1px 1px 0 0' }}
+                    layoutId="activeTab"
+                    style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
+                      background: '#fff', borderRadius: '1px 1px 0 0',
+                    }}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -87,11 +103,16 @@ export default function AppNavBar() {
           })}
         </div>
 
-        {/* Right side — more options */}
-        <div className="ml-auto flex items-center gap-1 flex-shrink-0">
-          <button
-            className="flex items-center gap-1 px-3 py-1 rounded text-white/70 hover:text-white hover:bg-white/10 text-xs transition-colors"
-          >
+        {/* More */}
+        <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
+          <button style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            padding: '4px 12px', borderRadius: 4,
+            color: 'rgba(255,255,255,0.65)', fontSize: 12, fontWeight: 600,
+            background: 'transparent', border: 'none', cursor: 'pointer',
+            fontFamily: 'Space Grotesk, sans-serif',
+            transition: 'color 0.15s',
+          }}>
             More <ChevronDown size={12} />
           </button>
         </div>

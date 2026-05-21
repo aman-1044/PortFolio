@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight, RefreshCw, ChevronDown, ExternalLink, Eye } from 'lucide-react'
 
 function formatDateTime(date) {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('en-IN', {
     month: 'short', day: 'numeric', year: 'numeric',
     hour: '2-digit', minute: '2-digit', hour12: true,
   }).format(date)
@@ -18,7 +18,7 @@ export default function SubHeader({ onRefresh, isRefreshing }) {
     return () => clearInterval(interval)
   }, [])
 
-  const handleRefresh = async () => {
+  const handleRefresh = () => {
     if (isRefreshing) return
     onRefresh()
     setLastRefresh(new Date())
@@ -28,28 +28,26 @@ export default function SubHeader({ onRefresh, isRefreshing }) {
   const timeSince = daysSince === 0 ? 'today' : `${daysSince} day${daysSince > 1 ? 's' : ''} ago`
 
   return (
-    <div
-      style={{
-        background: 'var(--sf-bg)',
-        borderBottom: '1px solid var(--sf-border)',
-      }}
-      className="px-4 py-2"
-    >
-      {/* Row 1: Breadcrumb + Timestamp + Actions */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
+    <div style={{
+      background: 'var(--sf-bg)',
+      borderBottom: '1px solid var(--sf-border)',
+      padding: '8px 16px',
+    }}>
+      {/* Row 1 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
         {/* Breadcrumb */}
-        <div className="flex items-center gap-1">
-          <span className="text-sf-muted text-xs font-medium">Dashboard</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ color: 'var(--sf-muted)', fontSize: 12, fontFamily: 'Space Grotesk, sans-serif' }}>Dashboard</span>
           <ChevronRight size={12} color="var(--sf-muted)" />
-          <span className="text-sf-text text-xs font-semibold">Aman Anand Portfolio</span>
+          <span style={{ color: 'var(--sf-text)', fontSize: 12, fontWeight: 700, fontFamily: 'Space Grotesk, sans-serif' }}>
+            Aman Anand Portfolio
+          </span>
         </div>
 
-        {/* Right: Action Buttons */}
-        <div className="flex items-center gap-2">
-          <button className="sf-btn-ghost py-1 px-3 text-xs flex items-center gap-1">
-            <ExternalLink size={12} />
-            Open
-            <ChevronDown size={11} />
+        {/* Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button className="sf-btn-ghost" style={{ fontSize: 12, padding: '5px 12px' }}>
+            <ExternalLink size={11} /> Open <ChevronDown size={11} />
           </button>
 
           <motion.button
@@ -57,72 +55,55 @@ export default function SubHeader({ onRefresh, isRefreshing }) {
             disabled={isRefreshing}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="sf-btn-primary py-1 px-3 text-xs flex items-center gap-1.5"
-            style={{ background: 'var(--sf-blue)' }}
+            className="sf-btn-primary"
+            style={{ fontSize: 12, padding: '5px 14px' }}
           >
             <motion.span
               animate={isRefreshing ? { rotate: 360 } : { rotate: 0 }}
               transition={isRefreshing ? { duration: 0.8, repeat: Infinity, ease: 'linear' } : {}}
+              style={{ display: 'inline-flex' }}
             >
               <RefreshCw size={12} />
             </motion.span>
             Refresh
           </motion.button>
 
-          <button className="sf-btn-ghost py-1 px-2 text-xs">
+          <button className="sf-btn-ghost" style={{ padding: '5px 8px' }}>
             <ChevronDown size={12} />
           </button>
         </div>
       </div>
 
-      {/* Row 2: Status bar */}
-      <div className="flex items-center gap-3 mt-1 flex-wrap">
+      {/* Row 2 — status */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, flexWrap: 'wrap' }}>
         <AnimatePresence mode="wait">
           {isRefreshing ? (
-            <motion.span
-              key="refreshing"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-xs"
-              style={{ color: 'var(--sf-blue-lt)' }}
-            >
+            <motion.span key="r" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ fontSize: 12, color: 'var(--neon-cyan)', fontFamily: 'Space Grotesk, sans-serif' }}>
               ⟳ Refreshing dashboard...
             </motion.span>
           ) : (
-            <motion.span
-              key="refreshed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-xs"
-              style={{ color: 'var(--sf-muted)' }}
-            >
+            <motion.span key="d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ fontSize: 12, color: 'var(--sf-muted)', fontFamily: 'Space Grotesk, sans-serif' }}>
               Last refreshed {timeSince}.{' '}
-              <button
-                onClick={handleRefresh}
-                className="transition-colors"
-                style={{ color: 'var(--sf-blue-lt)' }}
-              >
+              <button onClick={handleRefresh}
+                style={{ color: 'var(--neon-cyan)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontFamily: 'Space Grotesk, sans-serif' }}>
                 Refresh this dashboard
               </button>
             </motion.span>
           )}
         </AnimatePresence>
 
-        <span className="text-sf-muted text-xs">•</span>
-
-        <span className="text-xs" style={{ color: 'var(--sf-muted)' }}>
+        <span style={{ color: 'var(--sf-muted)', fontSize: 12 }}>•</span>
+        <span style={{ fontSize: 12, color: 'var(--sf-muted)', fontFamily: 'Space Grotesk, sans-serif' }}>
           As of {formatDateTime(now)}
         </span>
-
-        <span className="text-sf-muted text-xs">•</span>
-
-        <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--sf-muted)' }}>
+        <span style={{ color: 'var(--sf-muted)', fontSize: 12 }}>•</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: 'var(--sf-muted)', fontFamily: 'Space Grotesk, sans-serif' }}>
           <Eye size={11} />
-          <span>Viewing as </span>
-          <strong className="text-white">Aman Anand</strong>
-          <button className="text-xs ml-0.5" style={{ color: 'var(--sf-blue-lt)' }}>
+          Viewing as{' '}
+          <strong style={{ color: 'var(--sf-text)' }}>Aman Anand</strong>
+          <button style={{ color: 'var(--neon-cyan)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontFamily: 'Space Grotesk, sans-serif' }}>
             [Change]
           </button>
         </span>

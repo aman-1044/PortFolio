@@ -12,6 +12,7 @@ import CertsWidget    from './components/CertsWidget'
 import ChatterFeed    from './components/ChatterFeed'
 import { useGitHubRepos } from './hooks/useGitHubRepos'
 
+/* ── animation variants ───────────────────────────── */
 const cardVariants = {
   hidden:  { opacity: 0, y: 30 },
   visible: (i) => ({
@@ -21,6 +22,7 @@ const cardVariants = {
   }),
 }
 
+/* ── DashboardCard wrapper ────────────────────────── */
 function DashboardCard({ children, index, className = '', style = {} }) {
   return (
     <motion.div
@@ -36,10 +38,11 @@ function DashboardCard({ children, index, className = '', style = {} }) {
   )
 }
 
+/* ── Main App ─────────────────────────────────────── */
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery,  setSearchQuery]  = useState('')
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [refreshKey,   setRefreshKey]   = useState(0)
 
   const { repos, stats, loading, error, refetch } = useGitHubRepos()
 
@@ -54,23 +57,40 @@ export default function App() {
 
   return (
     <div style={{ background: 'var(--sf-bg)', minHeight: '100vh' }}>
-      {/* Fixed top bars */}
+
+      {/* ── Fixed top bars ── */}
       <GlobalHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <AppNavBar />
       <SubHeader onRefresh={handleRefresh} isRefreshing={isRefreshing} />
 
-      {/* Main content */}
-      <main className="px-4 py-4 max-w-[1400px] mx-auto space-y-4">
+      {/* ── Main dashboard ── */}
+      <main
+        style={{
+          maxWidth: '1400px',
+          margin: '0 auto',
+          padding: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}
+      >
 
         {/* Hero — full width */}
         <DashboardCard index={0}>
           <HeroWidget />
         </DashboardCard>
 
-        {/* Row 1: Projects (60%) + Right column (40%) */}
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
-          {/* Projects — 3/5 = 60% */}
-          <DashboardCard index={1} className="xl:col-span-3">
+        {/* Row 1: Projects (60%) + Right col (40%) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '16px',
+          }}
+          className="dashboard-row"
+        >
+          {/* Projects — 3/5 */}
+          <DashboardCard index={1} style={{ gridColumn: 'span 3' }}>
             <AnimatePresence mode="wait">
               <ProjectsWidget
                 key={`projects-${refreshKey}`}
@@ -83,8 +103,15 @@ export default function App() {
             </AnimatePresence>
           </DashboardCard>
 
-          {/* Right column — 2/5 = 40% */}
-          <div className="xl:col-span-2 flex flex-col gap-4">
+          {/* Right col — 2/5 */}
+          <div
+            style={{
+              gridColumn: 'span 2',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+          >
             <DashboardCard index={2}>
               <SkillsWidget
                 key={`skills-${refreshKey}`}
@@ -121,24 +148,32 @@ export default function App() {
 
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer
-        className="mt-8 py-4 px-6 text-center text-xs"
         style={{
+          marginTop: '32px',
+          padding: '16px 24px',
+          textAlign: 'center',
+          fontSize: '11px',
           borderTop: '1px solid var(--sf-border)',
           color: 'var(--sf-muted)',
           background: 'var(--sf-header)',
+          fontFamily: "'Space Grotesk', sans-serif",
+          letterSpacing: '0.04em',
         }}
       >
-        <span>
-          Aman Anand · Salesforce Developer Portfolio ·{' '}
-          <a href="https://github.com/aman-1044" target="_blank" rel="noopener noreferrer"
-             style={{ color: 'var(--sf-blue-lt)' }}>
-            github.com/aman-1044
-          </a>
-          {' · '}Built with React + Vite · Styled like Salesforce Lightning
-        </span>
+        Aman Anand · Salesforce Developer Portfolio ·{' '}
+        <a
+          href="https://github.com/aman-1044"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'var(--neon-cyan)' }}
+        >
+          github.com/aman-1044
+        </a>
+        {' · '}Built with React + Vite · Styled like Salesforce Lightning
       </footer>
+
     </div>
   )
 }

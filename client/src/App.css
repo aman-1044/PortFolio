@@ -1,22 +1,143 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DESIGN TOKENS — NEON DARK THEME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+  /* Backgrounds */
+  --bg: #050d1a;
+  --bg-card: #0a1628;
+  --bg-card-2: #0d1f38;
+
+  /* Neon accents */
+  --accent: #00d4ff;
+  /* cyan  — primary neon */
+  --accent-2: #7b2fff;
+  /* purple — secondary neon */
+  --accent-3: #00ff9d;
+  /* green  — success / active */
+
+  --accent-bg: rgba(0, 212, 255, 0.08);
+  --accent-border: rgba(0, 212, 255, 0.5);
+
+  /* Text */
+  --text-h: #e8f4ff;
+  --text-body: #8bafc8;
+
+  /* Borders & dividers */
+  --border: rgba(0, 212, 255, 0.12);
+
+  /* Social / link pill backgrounds */
+  --social-bg: rgba(0, 212, 255, 0.06);
+
+  /* Glow shadows */
+  --shadow: 0 0 20px rgba(0, 212, 255, 0.3),
+    0 0 60px rgba(0, 212, 255, 0.1);
+  --shadow-purple: 0 0 20px rgba(123, 47, 255, 0.4);
+  --neon-glow: 0 0 10px #00d4ff, 0 0 30px rgba(0, 212, 255, 0.4);
+  --neon-glow-purple: 0 0 10px #7b2fff, 0 0 30px rgba(123, 47, 255, 0.4);
+  --neon-glow-green: 0 0 10px #00ff9d, 0 0 30px rgba(0, 255, 157, 0.3);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   GLOBAL BASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-body);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+
+  /* Subtle grid overlay */
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Orbitron', monospace;
+  color: var(--text-h);
+  letter-spacing: 0.08em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: text-shadow 0.3s;
+
+  &:hover {
+    text-shadow: var(--neon-glow);
+  }
+}
+
+code,
+kbd,
+pre {
+  font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--accent);
   background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   COUNTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.counter {
+  font-family: 'Orbitron', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 8px 22px;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
   margin-bottom: 24px;
 
   &:hover {
     border-color: var(--accent-border);
+    box-shadow: var(--neon-glow);
+    transform: translateY(-1px);
   }
+
   &:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline-offset: 3px;
+    box-shadow: var(--neon-glow);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HERO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .hero {
   position: relative;
 
@@ -31,6 +152,12 @@
     width: 170px;
     position: relative;
     z-index: 0;
+    filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.55));
+    transition: filter 0.4s;
+
+    &:hover {
+      filter: drop-shadow(0 0 24px rgba(0, 212, 255, 0.85));
+    }
   }
 
   .framework,
@@ -42,8 +169,8 @@
     z-index: 1;
     top: 34px;
     height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.4);
+    filter: drop-shadow(0 0 10px rgba(123, 47, 255, 0.8));
   }
 
   .vite {
@@ -51,18 +178,33 @@
     top: 107px;
     height: 26px;
     width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.8);
+    filter: drop-shadow(0 0 8px rgba(0, 255, 157, 0.7));
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CENTER SECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #center {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 24px;
   place-content: center;
   place-items: center;
   flex-grow: 1;
+
+  h1 {
+    font-size: clamp(22px, 5vw, 36px);
+    font-weight: 900;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.45);
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-body);
+    text-align: center;
+  }
 
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
@@ -70,23 +212,52 @@
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NEXT STEPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #next-steps {
   display: flex;
-  border-top: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-card);
   text-align: left;
+  transition: box-shadow 0.3s;
 
-  & > div {
+  &:hover {
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.07);
+  }
+
+  &>div {
     flex: 1 1 0;
     padding: 32px;
+
     @media (max-width: 1024px) {
       padding: 24px 20px;
     }
+  }
+
+  h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-h);
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 13px;
+    color: var(--text-body);
+    line-height: 1.65;
   }
 
   .icon {
     margin-bottom: 16px;
     width: 22px;
     height: 22px;
+    color: var(--accent);
+    filter: drop-shadow(0 0 5px var(--accent));
   }
 
   @media (max-width: 1024px) {
@@ -104,35 +275,44 @@
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LINK LIST (inside next-steps)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #next-steps ul {
   list-style: none;
   padding: 0;
   display: flex;
   gap: 8px;
-  margin: 32px 0 0;
+  margin: 28px 0 0;
 
   .logo {
-    height: 18px;
+    height: 16px;
   }
 
   a {
     color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border-radius: 8px;
     background: var(--social-bg);
+    border: 1px solid var(--border);
     display: flex;
-    padding: 6px 12px;
+    padding: 7px 14px;
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s, border-color 0.3s, transform 0.2s;
 
     &:hover {
-      box-shadow: var(--shadow);
+      box-shadow: var(--neon-glow);
+      border-color: var(--accent-border);
+      transform: translateY(-2px);
     }
+
     .button-icon {
-      height: 18px;
-      width: 18px;
+      height: 16px;
+      width: 16px;
     }
   }
 
@@ -153,17 +333,63 @@
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SPACER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+
+  /* Animated neon scan line */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 8px var(--accent), 0 0 20px rgba(0, 212, 255, 0.5);
+    animation: sf-scan 3s ease-in-out infinite;
+  }
+
   @media (max-width: 1024px) {
     height: 48px;
   }
 }
 
+@keyframes sf-scan {
+  0% {
+    left: 0;
+    width: 0;
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 100%;
+    width: 30%;
+    opacity: 0;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TICKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .ticks {
   position: relative;
   width: 100%;
+  height: 1px;
+  background: var(--border);
 
   &::before,
   &::after {
@@ -175,10 +401,62 @@
 
   &::before {
     left: 0;
-    border-left-color: var(--border);
+    border-left-color: var(--accent);
+    filter: drop-shadow(0 0 4px var(--accent));
   }
+
   &::after {
     right: 0;
-    border-right-color: var(--border);
+    border-right-color: var(--accent-2);
+    filter: drop-shadow(0 0 4px var(--accent-2));
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   UTILITY — BADGE / PILL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  transition: box-shadow 0.25s, transform 0.2s;
+
+  &:hover {
+    transform: scale(1.06);
+  }
+
+  &.badge-cyan {
+    color: #00d4ff;
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+
+    &:hover {
+      box-shadow: var(--neon-glow);
+    }
+  }
+
+  &.badge-purple {
+    color: #a78bfa;
+    background: rgba(123, 47, 255, 0.1);
+    border: 1px solid rgba(123, 47, 255, 0.3);
+
+    &:hover {
+      box-shadow: var(--neon-glow-purple);
+    }
+  }
+
+  &.badge-green {
+    color: #00ff9d;
+    background: rgba(0, 255, 157, 0.08);
+    border: 1px solid rgba(0, 255, 157, 0.25);
+
+    &:hover {
+      box-shadow: var(--neon-glow-green);
+    }
   }
 }

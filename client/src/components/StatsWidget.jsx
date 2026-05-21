@@ -1,49 +1,25 @@
 import { motion } from 'framer-motion'
-import {
-  FunnelChart, Funnel, Tooltip, Cell, LabelList,
-  ResponsiveContainer,
-} from 'recharts'
-import { Users, Star, FolderGit2, Briefcase } from 'lucide-react'
+import { FunnelChart, Funnel, Tooltip, Cell, ResponsiveContainer } from 'recharts'
+import { Users, Star, FolderGit2 } from 'lucide-react'
 
 const FUNNEL_DATA = [
-  { name: 'Salesforce Developer', value: 100, color: '#0176D3', icon: '💼' },
-  { name: 'GitHub Repositories',  value: 75,  color: '#1B96FF', icon: '📁' },
-  { name: 'Community Stars',      value: 45,  color: '#2E844A', icon: '⭐' },
-  { name: 'Open to Work ✓',       value: 20,  color: '#FFB75D', icon: '✅' },
+  { name: 'Salesforce Developer', value: 100, color: '#0176D3' },
+  { name: 'GitHub Repositories',  value: 75,  color: '#00d4ff' },
+  { name: 'Community Stars',      value: 45,  color: '#00ff9d' },
+  { name: 'Open to Work ✓',       value: 20,  color: '#FFB75D' },
 ]
 
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
-  const d = payload[0].payload
   return (
-    <div
-      style={{
-        background: 'var(--sf-card-2)',
-        border: '1px solid var(--sf-border)',
-        borderRadius: 6,
-        padding: '8px 14px',
-        fontSize: 12,
-      }}
-    >
-      <p className="font-bold text-white">{d.icon} {d.name}</p>
+    <div style={{
+      background: 'var(--sf-card-2)',
+      border: '1px solid var(--sf-border)',
+      borderRadius: 6, padding: '8px 14px', fontSize: 12,
+      fontFamily: 'Space Grotesk, sans-serif', color: 'var(--sf-text)',
+    }}>
+      {payload[0].payload.name}
     </div>
-  )
-}
-
-const CustomLabel = ({ x, y, width, value, name }) => {
-  if (!width || width < 40) return null
-  return (
-    <text
-      x={x + width / 2}
-      y={y + 22}
-      fill="#fff"
-      textAnchor="middle"
-      fontSize={11}
-      fontFamily="Nunito, sans-serif"
-      fontWeight="600"
-    >
-      {name}
-    </text>
   )
 }
 
@@ -51,43 +27,31 @@ export default function StatsWidget({ stats, loading, isRefreshing }) {
   const show = !loading && !isRefreshing
 
   const statPills = [
-    { icon: Users,      label: 'Followers', value: stats.followers, color: 'var(--sf-blue-lt)' },
-    { icon: Star,       label: 'Stars',     value: stats.stars,     color: '#FFB75D' },
-    { icon: FolderGit2, label: 'Repos',     value: stats.repoCount, color: 'var(--sf-green)' },
+    { icon: Users,      label: 'Followers', value: stats.followers, color: 'var(--neon-cyan)'   },
+    { icon: Star,       label: 'Stars',     value: stats.stars,     color: 'var(--neon-yellow)' },
+    { icon: FolderGit2, label: 'Repos',     value: stats.repoCount, color: 'var(--neon-green)'  },
   ]
 
   return (
     <div id="stats" className="sf-widget">
-      {/* Header */}
       <div className="sf-widget-header">
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span className="sf-widget-title">Experience Stats</span>
           <span className="sf-record-count">Live</span>
         </div>
-        <span className="sf-pill sf-pill-green">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 mr-1 animate-pulse" />
-          GitHub Synced
-        </span>
+        <span className="status-live">GitHub Synced</span>
       </div>
 
-      {/* Chart */}
-      <div className="px-4 pt-4">
+      {/* Funnel Chart */}
+      <div style={{ padding: '16px 16px 0' }}>
         {isRefreshing || loading ? (
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
             {[100, 80, 60, 40].map((w, i) => (
-              <div
-                key={i}
-                className="shimmer-bg rounded mx-auto"
-                style={{ height: 36, width: `${w}%` }}
-              />
+              <div key={i} className="shimmer-bg" style={{ height: 36, width: `${w}%`, borderRadius: 6 }} />
             ))}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <ResponsiveContainer width="100%" height={200}>
               <FunnelChart>
                 <Tooltip content={<CustomTooltip />} />
@@ -96,16 +60,11 @@ export default function StatsWidget({ stats, loading, isRefreshing }) {
                   data={FUNNEL_DATA}
                   isAnimationActive={true}
                   animationBegin={0}
-                  animationDuration={800}
-                  animationEasing="ease-out"
+                  animationDuration={900}
                 >
-                  {FUNNEL_DATA.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.9} />
+                  {FUNNEL_DATA.map((entry, i) => (
+                    <Cell key={i} fill={entry.color} fillOpacity={0.85} />
                   ))}
-                  <LabelList
-                    position="center"
-                    content={<CustomLabel />}
-                  />
                 </Funnel>
               </FunnelChart>
             </ResponsiveContainer>
@@ -114,44 +73,46 @@ export default function StatsWidget({ stats, loading, isRefreshing }) {
       </div>
 
       {/* Legend */}
-      <div className="px-4 pb-2">
-        <div className="flex flex-col gap-1.5">
-          {FUNNEL_DATA.map((d) => (
-            <div key={d.name} className="flex items-center gap-2 text-xs">
-              <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: d.color }} />
-              <span style={{ color: 'var(--sf-muted)' }}>{d.name}</span>
-            </div>
-          ))}
-        </div>
+      <div style={{ padding: '0 16px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
+        {FUNNEL_DATA.map((d) => (
+          <div key={d.name} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, fontFamily: 'Space Grotesk, sans-serif' }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: d.color, flexShrink: 0, boxShadow: `0 0 6px ${d.color}` }} />
+            <span style={{ color: 'var(--sf-muted)' }}>{d.name}</span>
+          </div>
+        ))}
       </div>
 
-      {/* Stat Pills */}
-      <div
-        className="px-4 pb-4 pt-3 flex items-center gap-2 flex-wrap"
-        style={{ borderTop: '1px solid var(--sf-border)' }}
-      >
+      {/* Stat pills */}
+      <div style={{
+        padding: '12px 16px 16px',
+        borderTop: '1px solid var(--sf-border)',
+        display: 'flex', gap: 8, flexWrap: 'wrap',
+      }}>
         {statPills.map(({ icon: Icon, label, value, color }) => (
           <motion.div
             key={label}
-            whileHover={{ scale: 1.05, y: -1 }}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg flex-1 min-w-[80px]"
-            style={{ background: 'var(--sf-card-2)', border: '1px solid var(--sf-border)' }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            style={{
+              flex: 1, minWidth: 72,
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '8px 10px', borderRadius: 8,
+              background: 'rgba(0,0,0,0.25)',
+              border: '1px solid var(--sf-border)',
+              transition: 'box-shadow 0.2s',
+            }}
           >
             <Icon size={14} color={color} />
             <div>
               {isRefreshing || loading ? (
-                <div className="shimmer-bg rounded" style={{ width: 24, height: 14 }} />
+                <div className="shimmer-bg" style={{ width: 24, height: 14, borderRadius: 4 }} />
               ) : (
-                <motion.p
-                  className="font-bold text-sm text-white leading-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  key={value}
-                >
+                <p style={{ fontWeight: 800, fontSize: 14, color: color, fontFamily: 'Orbitron, sans-serif', lineHeight: 1, margin: 0, textShadow: `0 0 10px ${color}` }}>
                   {value}
-                </motion.p>
+                </p>
               )}
-              <p className="text-xs mt-0.5" style={{ color: 'var(--sf-muted)' }}>{label}</p>
+              <p style={{ fontSize: 10, color: 'var(--sf-muted)', marginTop: 2, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '0.04em' }}>
+                {label}
+              </p>
             </div>
           </motion.div>
         ))}

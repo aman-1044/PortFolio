@@ -7,65 +7,52 @@ const FEED_POSTS = [
   {
     id: 'avail',
     avatar: 'AA',
-    avatarBg: 'linear-gradient(135deg, #0176D3, #1B96FF)',
+    avatarBg: 'linear-gradient(135deg, var(--sf-blue), var(--neon-cyan))',
+    avatarShadow: 'var(--glow-cyan)',
     name: 'Aman Anand',
     handle: '@aman-1044',
     time: 'May 21, 2026',
     content: '🚀 Available for Salesforce Developer roles — LWC, Apex, Flows & more. Open to full-time & contract opportunities. Let\'s connect!',
-    likes: 24,
-    comments: 6,
-    badge: 'Available',
-    badgeClass: 'sf-pill-green',
+    likes: 24, comments: 6,
+    badge: 'Available', badgeCls: 'badge-green',
   },
   {
     id: 'github',
-    avatar: <Github size={18} color="#fff" />,
+    avatar: <Github size={17} color="#fff" />,
     avatarBg: '#161B22',
     name: 'GitHub',
     handle: 'github.com/aman-1044',
     time: 'Active',
     content: '18 public repositories including ML projects, web apps, and UI components. Built with Python, JavaScript, HTML/CSS & more.',
-    likes: 0,
-    comments: 0,
-    link: 'https://github.com/aman-1044',
-    linkLabel: 'View Profile →',
-    actionLabel: 'Follow ↗',
-    badge: '18 Repos',
-    badgeClass: 'sf-pill-gray',
+    likes: 0, comments: 0,
+    link: 'https://github.com/aman-1044', linkLabel: 'View Profile →', actionLabel: 'Follow ↗',
+    badge: '18 Repos', badgeCls: 'badge-gray',
   },
   {
     id: 'linkedin',
-    avatar: <Linkedin size={18} color="#fff" />,
+    avatar: <Linkedin size={17} color="#fff" />,
     avatarBg: '#0A66C2',
     name: 'LinkedIn',
     handle: 'aman-anand-201b5219a',
     time: 'Open to opportunities',
     content: 'Salesforce Developer | LWC Specialist | Building CRM solutions. Connect for opportunities, collaborations or just to say hi!',
-    likes: 0,
-    comments: 0,
-    link: 'https://www.linkedin.com/in/aman-anand-201b5219a/',
-    linkLabel: 'Connect →',
-    actionLabel: 'Message ↗',
-    badge: 'Open to Work',
-    badgeClass: 'sf-pill-blue',
+    likes: 0, comments: 0,
+    link: 'https://www.linkedin.com/in/aman-anand-201b5219a/', linkLabel: 'Connect →', actionLabel: 'Message ↗',
+    badge: 'Open to Work', badgeCls: 'badge-blue',
   },
 ]
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
 
 export default function ChatterFeed({ isRefreshing }) {
-  const [form, setForm]       = useState({ name: '', email: '', message: '' })
-  const [sending, setSending] = useState(false)
-  const [toast, setToast]     = useState(null)
+  const [form, setForm]           = useState({ name: '', email: '', message: '' })
+  const [sending, setSending]     = useState(false)
+  const [toast, setToast]         = useState(null)
   const [likedPosts, setLikedPosts] = useState(new Set())
   const [feedSearch, setFeedSearch] = useState('')
 
   const handleLike = (id) => {
-    setLikedPosts((prev) => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
+    setLikedPosts((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
   }
 
   const handleSubmit = async (e) => {
@@ -77,9 +64,8 @@ export default function ChatterFeed({ isRefreshing }) {
       setToast({ type: 'success', msg: 'Message sent! Aman will get back to you soon.' })
       setForm({ name: '', email: '', message: '' })
     } catch (err) {
-      // Still show success-like message if backend not configured
       if (err.code === 'ERR_NETWORK' || err.code === 'ECONNABORTED') {
-        setToast({ type: 'info', msg: 'Message noted! (Backend not yet connected — configure .env to persist.)' })
+        setToast({ type: 'info', msg: 'Message noted! Connect MongoDB to persist messages.' })
         setForm({ name: '', email: '', message: '' })
       } else {
         setToast({ type: 'error', msg: 'Something went wrong. Please try again.' })
@@ -90,7 +76,7 @@ export default function ChatterFeed({ isRefreshing }) {
     }
   }
 
-  const filteredPosts = FEED_POSTS.filter((p) => {
+  const filtered = FEED_POSTS.filter((p) => {
     if (!feedSearch) return true
     const q = feedSearch.toLowerCase()
     return p.name.toLowerCase().includes(q) || p.content.toLowerCase().includes(q)
@@ -100,229 +86,204 @@ export default function ChatterFeed({ isRefreshing }) {
     <div id="contact" className="sf-widget">
       {/* Header */}
       <div className="sf-widget-header">
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span className="sf-widget-title">Chatter</span>
           <span className="sf-record-count">{FEED_POSTS.length} Posts</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--sf-muted)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ position: 'relative' }}>
+            <Search size={11} style={{ position: 'absolute', left: 9, top: '50%', transform: 'translateY(-50%)', color: 'var(--sf-muted)', pointerEvents: 'none' }} />
             <input
-              type="text"
-              placeholder="Search this feed..."
-              value={feedSearch}
-              onChange={(e) => setFeedSearch(e.target.value)}
-              className="sf-input text-xs py-1 pl-7 pr-3 h-7"
-              style={{ width: 180 }}
+              type="text" placeholder="Search this feed..."
+              value={feedSearch} onChange={(e) => setFeedSearch(e.target.value)}
+              className="sf-input"
+              style={{ paddingLeft: 28, paddingTop: 5, paddingBottom: 5, width: 180, fontSize: 12 }}
             />
           </div>
-          <button className="sf-btn-ghost text-xs flex items-center gap-1">
-            Most Recent <ChevronDown size={11} />
+          <button className="sf-btn-ghost" style={{ fontSize: 11, padding: '4px 10px' }}>
+            Most Recent <ChevronDown size={10} />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x" style={{ borderColor: 'var(--sf-border)' }}>
-        {/* Left: Feed Posts */}
-        <div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        {/* Left: Feed */}
+        <div style={{ borderRight: '1px solid var(--sf-border)' }}>
           {isRefreshing ? (
-            <div className="p-4 space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex gap-3">
-                  <div className="shimmer-bg rounded-full flex-shrink-0" style={{ width: 36, height: 36 }} />
-                  <div className="flex-1 space-y-2">
-                    <div className="shimmer-bg rounded" style={{ width: '60%', height: 12 }} />
-                    <div className="shimmer-bg rounded" style={{ width: '90%', height: 12 }} />
-                    <div className="shimmer-bg rounded" style={{ width: '75%', height: 12 }} />
+            <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {[1,2,3].map((i) => (
+                <div key={i} style={{ display: 'flex', gap: 12 }}>
+                  <div className="shimmer-bg" style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0 }} />
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <div className="shimmer-bg" style={{ width: '60%', height: 11 }} />
+                    <div className="shimmer-bg" style={{ width: '90%', height: 11 }} />
+                    <div className="shimmer-bg" style={{ width: '70%', height: 11 }} />
                   </div>
                 </div>
               ))}
             </div>
-          ) : (
-            filteredPosts.map((post, i) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="chatter-post"
-              >
-                <div className="flex gap-3">
-                  {/* Avatar */}
-                  <div
-                    className="chatter-avatar flex-shrink-0"
-                    style={{ background: post.avatarBg, color: '#fff' }}
-                  >
-                    {typeof post.avatar === 'string' ? post.avatar : post.avatar}
+          ) : filtered.map((post, i) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="chatter-post"
+            >
+              <div style={{ display: 'flex', gap: 12 }}>
+                {/* Avatar */}
+                <div
+                  className="chatter-avatar"
+                  style={{
+                    background: post.avatarBg,
+                    color: '#fff',
+                    boxShadow: post.avatarShadow || 'none',
+                    fontFamily: 'Orbitron, sans-serif',
+                  }}
+                >
+                  {typeof post.avatar === 'string' ? post.avatar : post.avatar}
+                </div>
+
+                {/* Content */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontWeight: 800, fontSize: 13, color: 'var(--sf-text)', fontFamily: 'Space Grotesk, sans-serif' }}>{post.name}</span>
+                      <span style={{ fontSize: 11, color: 'var(--sf-muted)', fontFamily: 'Space Grotesk, sans-serif' }}>{post.handle}</span>
+                    </div>
+                    <span className={`badge ${post.badgeCls}`}>{post.badge}</span>
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-white">{post.name}</span>
-                        <span className="text-xs" style={{ color: 'var(--sf-muted)' }}>{post.handle}</span>
-                      </div>
-                      <span className={`sf-pill ${post.badgeClass}`}>{post.badge}</span>
-                    </div>
+                  <p style={{ fontSize: 11, color: 'var(--sf-muted)', marginTop: 2, fontFamily: 'Space Grotesk, sans-serif' }}>{post.time}</p>
 
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--sf-muted)' }}>{post.time}</p>
+                  <p style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6, color: '#c5d8ee', fontFamily: 'Space Grotesk, sans-serif' }}>
+                    {post.content}
+                  </p>
 
-                    <p className="text-sm mt-2 leading-relaxed" style={{ color: '#D0DCF0' }}>
-                      {post.content}
-                    </p>
-
-                    {/* Links */}
-                    {post.link && (
-                      <div className="flex items-center gap-3 mt-2">
-                        <a
-                          href={post.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-semibold flex items-center gap-1 transition-colors hover:underline"
-                          style={{ color: 'var(--sf-blue-lt)' }}
-                        >
-                          {post.linkLabel} <ExternalLink size={10} />
-                        </a>
-                        <a
-                          href={post.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs sf-btn-ghost py-0.5 px-2"
-                        >
-                          {post.actionLabel}
-                        </a>
-                      </div>
-                    )}
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-4 mt-3">
-                      <button
-                        onClick={() => handleLike(post.id)}
-                        className="flex items-center gap-1.5 text-xs transition-colors"
-                        style={{ color: likedPosts.has(post.id) ? 'var(--sf-blue-lt)' : 'var(--sf-muted)' }}
+                  {post.link && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
+                      <a
+                        href={post.link} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 12, fontWeight: 700, color: 'var(--neon-cyan)', display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'Space Grotesk, sans-serif' }}
                       >
-                        <ThumbsUp size={12} />
-                        Like {(post.likes + (likedPosts.has(post.id) ? 1 : 0)) > 0 ? `(${post.likes + (likedPosts.has(post.id) ? 1 : 0)})` : ''}
-                      </button>
-                      <button
-                        className="flex items-center gap-1.5 text-xs transition-colors hover:text-white"
-                        style={{ color: 'var(--sf-muted)' }}
-                      >
-                        <MessageCircle size={12} />
-                        Comment {post.comments > 0 ? `(${post.comments})` : ''}
-                      </button>
+                        {post.linkLabel} <ExternalLink size={10} />
+                      </a>
+                      <a href={post.link} target="_blank" rel="noopener noreferrer" className="sf-btn-ghost" style={{ fontSize: 11, padding: '2px 8px', textDecoration: 'none' }}>
+                        {post.actionLabel}
+                      </a>
                     </div>
+                  )}
+
+                  {/* Like / Comment */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 10 }}>
+                    <button
+                      onClick={() => handleLike(post.id)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 5, fontSize: 12,
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        color: likedPosts.has(post.id) ? 'var(--neon-cyan)' : 'var(--sf-muted)',
+                        fontFamily: 'Space Grotesk, sans-serif',
+                        transition: 'color 0.2s',
+                      }}
+                    >
+                      <ThumbsUp size={12} />
+                      Like {(post.likes + (likedPosts.has(post.id) ? 1 : 0)) > 0 ? `(${post.likes + (likedPosts.has(post.id) ? 1 : 0)})` : ''}
+                    </button>
+                    <button
+                      style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--sf-muted)', fontFamily: 'Space Grotesk, sans-serif' }}
+                    >
+                      <MessageCircle size={12} />
+                      Comment {post.comments > 0 ? `(${post.comments})` : ''}
+                    </button>
                   </div>
                 </div>
-              </motion.div>
-            ))
-          )}
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Right: Contact Form */}
-        <div className="p-5">
-          <div className="mb-4">
-            <h3 className="text-sm font-bold text-white">Send a Message</h3>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--sf-muted)' }}>
-              Drop Aman a message — he'll respond within 24 hours.
-            </p>
-          </div>
+        <div style={{ padding: 20 }}>
+          <h3 style={{ fontSize: 13, fontWeight: 800, color: 'var(--sf-text)', marginBottom: 4, fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.06em' }}>
+            Send a Message
+          </h3>
+          <p style={{ fontSize: 12, color: 'var(--sf-muted)', marginBottom: 16, fontFamily: 'Space Grotesk, sans-serif' }}>
+            Drop Aman a message — he'll respond within 24 hours.
+          </p>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-semibold mb-1 block" style={{ color: 'var(--sf-muted)' }}>
-                  Name *
-                </label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  required
-                  placeholder="Your name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="sf-input text-xs py-2"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-semibold mb-1 block" style={{ color: 'var(--sf-muted)' }}>
-                  Email *
-                </label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  required
-                  placeholder="your@email.com"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="sf-input text-xs py-2"
-                />
-              </div>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {[
+                { id: 'contact-name', label: 'Name', type: 'text', key: 'name', placeholder: 'Your name' },
+                { id: 'contact-email', label: 'Email', type: 'email', key: 'email', placeholder: 'your@email.com' },
+              ].map(({ id, label, type, key, placeholder }) => (
+                <div key={key}>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 5, color: 'var(--sf-muted)', fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    {label} *
+                  </label>
+                  <input
+                    id={id} type={type} required placeholder={placeholder}
+                    value={form[key]} onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                    className="sf-input" style={{ fontSize: 12, padding: '7px 10px' }}
+                  />
+                </div>
+              ))}
             </div>
 
             <div>
-              <label className="text-xs font-semibold mb-1 block" style={{ color: 'var(--sf-muted)' }}>
+              <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 5, color: 'var(--sf-muted)', fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 Message *
               </label>
               <textarea
-                id="contact-message"
-                required
-                rows={4}
+                id="contact-message" required rows={4}
                 placeholder="Tell Aman about your opportunity or project..."
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="sf-input text-xs py-2 resize-none"
-                style={{ lineHeight: 1.6 }}
+                value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className="sf-input" style={{ fontSize: 12, padding: '7px 10px', resize: 'none', lineHeight: 1.6 }}
               />
             </div>
 
             <motion.button
-              type="submit"
-              disabled={sending}
-              whileHover={{ scale: 1.02, brightness: 1.1 }}
-              whileTap={{ scale: 0.97 }}
-              className="sf-btn-primary w-full justify-center py-2.5 text-sm"
+              type="submit" disabled={sending}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+              className="sf-btn-primary"
+              style={{ width: '100%', justifyContent: 'center', padding: '10px 16px', fontSize: 13 }}
             >
               {sending ? (
-                <>
-                  <motion.span
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-                    className="inline-block"
-                  >
-                    ⟳
-                  </motion.span>
-                  Sending...
-                </>
+                <><motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} style={{ display: 'inline-flex' }}>⟳</motion.span> Sending...</>
               ) : (
-                <>
-                  <Send size={14} />
-                  Send Message
-                </>
+                <><Send size={14} /> Send Message</>
               )}
             </motion.button>
           </form>
 
           {/* Quick links */}
-          <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--sf-border)' }}>
-            <p className="text-xs font-semibold mb-3" style={{ color: 'var(--sf-muted)' }}>QUICK LINKS</p>
-            <div className="space-y-2">
+          <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--sf-border)' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, marginBottom: 10, color: 'var(--sf-muted)', fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              Quick Links
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
-                { label: 'GitHub Profile',   href: 'https://github.com/aman-1044',                          icon: <Github size={14} /> },
-                { label: 'LinkedIn Profile', href: 'https://www.linkedin.com/in/aman-anand-201b5219a/',  icon: <Linkedin size={14} /> },
+                { label: 'GitHub Profile',   href: 'https://github.com/aman-1044',                        icon: <Github size={14} color="var(--sf-muted)" /> },
+                { label: 'LinkedIn Profile', href: 'https://www.linkedin.com/in/aman-anand-201b5219a/',  icon: <Linkedin size={14} color="var(--sf-muted)" /> },
               ].map(({ label, href, icon }) => (
                 <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-xs py-2 px-3 rounded-md transition-all"
-                  style={{ background: 'var(--sf-card-2)', border: '1px solid var(--sf-border)', color: 'var(--sf-blue-lt)' }}
+                  key={label} href={href} target="_blank" rel="noopener noreferrer"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    fontSize: 12, padding: '8px 12px', borderRadius: 8,
+                    background: 'rgba(0,212,255,0.04)',
+                    border: '1px solid var(--sf-border)',
+                    color: 'var(--neon-cyan)',
+                    fontWeight: 600, textDecoration: 'none',
+                    fontFamily: 'Space Grotesk, sans-serif',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--neon-cyan)'; e.currentTarget.style.boxShadow = 'var(--glow-cyan)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--sf-border)'; e.currentTarget.style.boxShadow = 'none' }}
                 >
                   {icon}
-                  <span className="font-semibold">{label}</span>
-                  <ExternalLink size={10} className="ml-auto" />
+                  {label}
+                  <ExternalLink size={10} color="var(--sf-muted)" style={{ marginLeft: 'auto' }} />
                 </a>
               ))}
             </div>
@@ -339,21 +300,16 @@ export default function ChatterFeed({ isRefreshing }) {
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             className="sf-toast"
             style={{
-              borderColor: toast.type === 'success'
-                ? 'var(--sf-green)'
-                : toast.type === 'error'
-                ? 'var(--sf-red)'
-                : 'var(--sf-blue)',
+              borderColor: toast.type === 'success' ? 'rgba(0,255,157,0.4)' : toast.type === 'error' ? 'rgba(234,0,30,0.4)' : 'rgba(0,212,255,0.4)',
             }}
           >
-            {toast.type === 'success' ? (
-              <CheckCircle2 size={18} color="var(--sf-green)" />
-            ) : toast.type === 'error' ? (
-              <XCircle size={18} color="var(--sf-red)" />
-            ) : (
-              <CheckCircle2 size={18} color="var(--sf-blue-lt)" />
-            )}
-            <span className="text-sm">{toast.msg}</span>
+            {toast.type === 'success'
+              ? <CheckCircle2 size={18} color="var(--neon-green)" />
+              : toast.type === 'error'
+              ? <XCircle size={18} color="var(--sf-red)" />
+              : <CheckCircle2 size={18} color="var(--neon-cyan)" />
+            }
+            <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: 13 }}>{toast.msg}</span>
           </motion.div>
         )}
       </AnimatePresence>
