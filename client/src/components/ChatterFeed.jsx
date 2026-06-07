@@ -42,7 +42,7 @@ const FEED_POSTS = [
   },
 ]
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://portfolio-htxb.onrender.com'
 
 export default function ChatterFeed({ isRefreshing }) {
   const [form, setForm]           = useState({ name: '', email: '', message: '' })

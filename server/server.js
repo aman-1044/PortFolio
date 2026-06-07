@@ -10,15 +10,17 @@ const app  = express()
 const PORT = process.env.PORT || 5000
 
 // ── Middleware ──────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173'
+]
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL)
+}
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true)
-    
-    const isLocalhost = /^http:\/\/localhost:\d+$/.test(origin)
-    const isAllowedFrontend = origin === process.env.FRONTEND_URL
-    
-    if (isLocalhost || isAllowedFrontend) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
